@@ -14,7 +14,7 @@ export default function App() {
   // Backend and environment configuration
   const [backendConfig, setBackendConfig] = useState<BackendConfig>({
     apiBaseUrl: ApiService.getBaseUrl(),
-    isMockMode: false, // Default to Mock Mode as requested for frontend prototype
+    isMockMode: true, // Default to Mock Mode as requested for frontend prototype
     isConnected: null,
     lastHealthCheck: null
   });
@@ -40,7 +40,20 @@ export default function App() {
   });
 
   // On mount, auto-load first sample preset so the user sees a full working demo immediately!
+  useEffect(() => {
+    const defaultPreset = SAMPLE_DOCUMENTS[0];
+    const dummyFile = new File(['[Binary content of company_regulations.pdf]'], defaultPreset.info.name, {
+      type: defaultPreset.info.type
+    });
 
+    setDocState({
+      file: dummyFile,
+      info: defaultPreset.info,
+      status: 'ready',
+      progress: 100,
+      errorMessage: null
+    });
+  }, []);
 
   // Handlers for Document
   const handleSelectFile = (file: File) => {
